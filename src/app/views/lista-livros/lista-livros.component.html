@@ -7,8 +7,8 @@
     </button>
   </div>
   <p>Busque por assunto, autoria, nome...</p>
-  <div class="container-card" *ngIf="listaLivros?.length > 0; else telaInicial">
-    <div *ngFor="let livro of listaLivros">
+  <div class="container-card" *ngIf="listBoook?.length > 0; else telaInicial">
+    <div *ngFor="let livro of listBoook">
       <app-livro [livro]="livro"></app-livro>
     </div>
   </div>
