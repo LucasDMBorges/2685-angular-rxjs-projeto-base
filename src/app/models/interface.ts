@@ -1,4 +1,4 @@
-export interface Book {
+export interface Livro {
   title?: string;
   authors?: string[];
   publisher?: string;
@@ -40,7 +40,7 @@ export interface Item {
   volumeInfo: VolumeInfo;
 }
 
-export interface ResultBooks {
+export interface Resposta {
   items: Item[];
   totalItems: number;
 }

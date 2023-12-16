@@ -1,7 +1,8 @@
-import { ResultBooks, VolumeInfo, ImageLinks } from './../../models/interface';
-import { Component, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Book } from 'src/app/models/interface';
+import { FormControl } from '@angular/forms';
+import { Item, Livro } from './../../models/interface';
+import { Component } from '@angular/core';
+import { Subscription, debounceTime, filter, map, switchMap } from 'rxjs';
+import { LivroVolumeInfo } from 'src/app/models/livroVolumeInfo';
 
 import { LivroService } from 'src/app/service/livro.service';
 
@@ -10,43 +11,21 @@ import { LivroService } from 'src/app/service/livro.service';
   templateUrl: './lista-livros.component.html',
   styleUrls: ['./lista-livros.component.css'],
 })
-export class ListaLivrosComponent implements OnDestroy {
-  listBoook: Book[];
-
-  query: string = '';
-
-  subscription: Subscription;
-
-  book: Book;
+export class ListaLivrosComponent {
+  campoBusca = new FormControl();
 
   constructor(private service: LivroService) {}
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  livrosEncontrados$ = this.campoBusca.valueChanges.pipe(
+    debounceTime(300),
+    filter((valorDigitado) => valorDigitado.length >= 3),
+    switchMap((valorDigitado) => this.service.find(valorDigitado)),
+    map((items) => this.formatarResultado(items))
+  );
 
-  findBooks() {
-    this.subscription = this.service.find(this.query).subscribe({
-      next: (res) => (this.listBoook = this.formatResultBooks(res)),
-      error: (err) => console.log(err),
+  formatarResultado(items: Item[]): LivroVolumeInfo[] {
+    return items.map((item) => {
+      return new LivroVolumeInfo(item);
     });
-  }
-
-  formatResultBooks(resultBooks): Book[] {
-    const listBooks: Book[] = [];
-    resultBooks.forEach((book) => {
-      listBooks.push(
-        (this.book = {
-          title: book.volumeInfo?.title,
-          authors: book.volumeInfo?.authors,
-          publisher: book.volumeInfo?.publisher,
-          publishedDate: book.volumeInfo?.publishedDate,
-          description: book.volumeInfo?.description,
-          previewLink: book.volumeInfo?.previewLink,
-          thumbnail: book.volumeInfo?.ImageLinks?.thumbnail,
-        })
-      );
-    });
-    return listBooks;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Book } from 'src/app/models/interface';
+import { LivroVolumeInfo } from 'src/app/models/livroVolumeInfo';
 
 @Component({
   selector: 'app-livro',
@@ -7,7 +7,7 @@ import { Book } from 'src/app/models/interface';
   styleUrls: ['./livro.component.css'],
 })
 export class LivroComponent {
-  @Input() livro: Book;
+  @Input() livro: LivroVolumeInfo;
   modalAberto: boolean;
 
   onModalChange(evento: boolean) {
