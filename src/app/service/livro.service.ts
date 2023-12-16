@@ -11,11 +11,9 @@ export class LivroService {
 
   constructor(private http: HttpClient) {}
 
-  find(query?: string): Observable<Item[]> {
+  find(query?: string): Observable<Resposta> {
     const params = new HttpParams().append('q', query);
 
-    return this.http
-      .get<Resposta>(this.API, { params })
-      .pipe(map((resultado) => resultado.items));
+    return this.http.get<Resposta>(this.API, { params });
   }
 }
